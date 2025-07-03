@@ -20,10 +20,13 @@ public class MainManager : MonoBehaviour
 
     public Text highScoreText;
 
+    public GameObject returnToStartButton;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        //Debug.Log("started main scene");
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
 
@@ -38,7 +41,11 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
-        highScoreText.text = $"Best Score : {HighScoreManager.instance.highScorePlayerName} : {HighScoreManager.instance.highScore}";
+
+        highScoreText.text = $"Next score to beat : {HighScoreManager.instance.scoreToBeat.HighScorePlayerName} : {HighScoreManager.instance.scoreToBeat.HighScore}";
+        returnToStartButton.SetActive(true);
+        
+        
     }
 
     private void Update()
@@ -54,10 +61,12 @@ public class MainManager : MonoBehaviour
 
                 Ball.transform.SetParent(null);
                 Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
+                returnToStartButton.SetActive(false);
             }
         }
         else if (m_GameOver)
         {
+            returnToStartButton.SetActive(true);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -70,9 +79,26 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
-        
+        //Check for highScore
+        Debug.Log("m_points"+m_Points+"  score to beat high score " + HighScoreManager.instance.scoreToBeat.HighScore);
+        CheckScore();
         
     }
+
+    void CheckScore()
+    {
+        if (m_Points > HighScoreManager.instance.scoreToBeat.HighScore)
+        {
+            updateScore();
+        }
+    }
+
+    void updateScore()
+    {
+        HighScoreManager.instance.RefreshScores(m_Points,m_GameOver);
+        highScoreText.text = $"Next score to beat : {HighScoreManager.instance.scoreToBeat.HighScorePlayerName} : {HighScoreManager.instance.scoreToBeat.HighScore}";
+    }
+    
 
     void RegisterHighScore(int score)
     {
@@ -84,11 +110,13 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
-        if (m_Points > HighScoreManager.instance.highScore)
+        updateScore();
+        HighScoreManager.instance.SaveHighScore();
+        /* if (m_Points > HighScoreManager.instance.highScore)
         {
             RegisterHighScore(m_Points);
             HighScoreManager.instance.SaveHighScore();
             highScoreText.text = $"Best Score : {HighScoreManager.instance.highScorePlayerName} : {HighScoreManager.instance.highScore}";
-        }
+        } */
     }
 }

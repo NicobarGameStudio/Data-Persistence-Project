@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,14 +13,19 @@ public class StartMenuUIHandler : MonoBehaviour
     {
         Debug.Log("On Start Menu UI Handler Awake");
         //SceneManager.LoadScene(0);
-       //SceneManager.UnloadSceneAsync(1);
+        //SceneManager.UnloadSceneAsync(1);
     }
     // Start is called before the first frame update
     void Start()
     {
         //SceneManager.UnloadSceneAsync(1);
         //SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(0));
-        highScoreText.text = $"Best Score : {HighScoreManager.instance.highScorePlayerName} : {HighScoreManager.instance.highScore}";
+        if (HighScoreManager.instance != null && HighScoreManager.instance.Top10HighScores.Count > 0)
+        {
+            HighScoreData highScoreData = HighScoreManager.instance.Top10HighScores[0];
+            highScoreText.text = $"Best Score : {highScoreData.HighScorePlayerName} : {highScoreData.HighScore}";
+        }
+        
     }
 
     // Update is called once per frame
@@ -36,5 +42,28 @@ public class StartMenuUIHandler : MonoBehaviour
             Debug.Log("On start name " + HighScoreManager.instance.currentPlayerName);
         }
         SceneManager.LoadScene(1);
+    }
+
+    public void DisplayHighScores()
+    {
+        if (HighScoreManager.instance != null)
+        {
+            Debug.Log("high score button clicked");
+            SceneManager.LoadScene(2);
+        }
+    }
+
+    public void ExitGame()
+    {
+#if (UNITY_EDITOR)
+        {
+            EditorApplication.ExitPlaymode();
+        }
+#else
+        {
+            Application.Quit();
+        }
+#endif
+
     }
 }
