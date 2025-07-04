@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class HighScoreManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class HighScoreManager : MonoBehaviour
 
     public HighScoreData scoreToBeat;
     public List<HighScoreData> Top10HighScores;
+    public String selectedDifficultyToggle;
 
     void Awake()
     {
@@ -48,6 +50,7 @@ public class HighScoreManager : MonoBehaviour
     [System.Serializable]
     class SaveData
     {
+        public String difficultyToggle;
         public List<HighScoreData> Top10HighScores;
     }
     public void RefreshScores(int points, bool gameOver)
@@ -107,6 +110,7 @@ public class HighScoreManager : MonoBehaviour
     {
         SaveData data = new SaveData();
         data.Top10HighScores = instance.Top10HighScores;
+        data.difficultyToggle = instance.selectedDifficultyToggle;
         /* data.HighScorePlayerName = instance.highScorePlayerName;
         data.HighScore = instance.highScore; */
         string jsonSaveData = JsonUtility.ToJson(data);
@@ -138,6 +142,7 @@ public class HighScoreManager : MonoBehaviour
                 instance.Top10HighScores = new List<HighScoreData>();
                 instance.scoreToBeat = new HighScoreData();
             }
+            instance.selectedDifficultyToggle = data.difficultyToggle;
 
 
             /* instance.highScore = data.HighScore;

@@ -31,6 +31,22 @@ public class MainManager : MonoBehaviour
         int perLine = Mathf.FloorToInt(4.0f / step);
 
         int[] pointCountArray = new[] { 1, 1, 2, 2, 5, 5 };
+        switch (HighScoreManager.instance.selectedDifficultyToggle)
+        {
+            case "Easy Difficulty":
+                LineCount = 2;
+                break;
+            case "Medium Difficulty":
+                LineCount = 4;
+                break;
+            case "Hard Difficulty":
+                LineCount = 6;
+                break;
+            default:
+                LineCount = 2;
+                break;
+        }
+        
         for (int i = 0; i < LineCount; ++i)
         {
             for (int x = 0; x < perLine; ++x)

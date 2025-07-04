@@ -53,6 +53,11 @@ public class StartMenuUIHandler : MonoBehaviour
         }
     }
 
+    public void DisplaySettings()
+    {
+        SceneManager.LoadScene(3);
+    }
+
     public void ExitGame()
     {
 #if (UNITY_EDITOR)
